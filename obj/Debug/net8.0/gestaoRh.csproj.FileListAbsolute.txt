@@ -135,3 +135,4 @@
 /home/andre/Documentos/DEV/gestaoRh/bin/Debug/net8.0/runtimes/browser/lib/net8.0/System.Text.Encodings.Web.dll
 /home/andre/Documentos/DEV/gestaoRh/bin/Debug/net8.0/AutoMapper.dll
 /home/andre/Documentos/DEV/gestaoRh/bin/Debug/net8.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+/home/andre/Documentos/DEV/gestaoRh/obj/Debug/net8.0/gestaoRh.sourcelink.json

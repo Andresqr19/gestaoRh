@@ -6,18 +6,31 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:3000") // A origem do seu app React
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                      });
+});
 
 builder.Services.AddDbContext<GestaoRhContext>(options =>
 {
     options
-        .UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")) // String de conexão do appsettings.json
-        .EnableSensitiveDataLogging(); // Habilita o logging sensível
+        .UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+        .EnableSensitiveDataLogging();
 });
 
+// Suas injeções de dependência
 builder.Services.AddControllers().AddApplicationPart(typeof(UsuarioController).Assembly);
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
@@ -46,6 +59,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseHttpsRedirection(); // Adicionado para manter a boa prática
+
+// =====================================================================
+// 3. Use a política de CORS que você criou
+// A ordem é importante: deve vir antes de MapControllers()
+// =====================================================================
+app.UseCors(MyAllowSpecificOrigins);
+
 app.MapControllers();
-app.UseHttpsRedirection();
+
 app.Run();
